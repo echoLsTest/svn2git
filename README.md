@@ -7,13 +7,11 @@ java -jar svn-migration-scripts.jar authors $SVN_URL > authors_map
 sed -i 's/mycompany/stateauto/g' authors_map
 ```
 
-## Create git repo with authors file and without svn revision in commit message (so just original svn commit message)
+## Create GIT repo with authors file and without SVN revision in commit message
 ```
 git svn clone SVN_URL --authors-file=authors_map --no-metadata --prefix "" -s -r<start>:<end> <new_DIRECTORY> --stdlayout
-**Eg:** git svn clone SVN_URL --authors-file=authors_map --no-metadata --prefix "" -s -r123:456 REPO_NAME --stdlayout
-**Note:** <start><end> are the SVN revision numbers 
+Note: <start>,<end> are the SVN revision numbers 
 ```
-
 
 ## Fix tags
 ```
@@ -48,8 +46,10 @@ git checkout <SVN_BranchName>
 git fetch origin
 git merge -s recursive -X theirs origin/<SVN_BranchName> --allow-unrelated-histories -m "Migrating SVN history"
 ```
-## Final
+## Lastly
 ```
 git push origin --all
 git push origin --tags
 ```
+
+##### This is built with the help of [Atlassian docs](https://www.atlassian.com/git/tutorials/migrating-overview).
