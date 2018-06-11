@@ -7,42 +7,48 @@ java -jar svn-migration-scripts.jar authors $SVN_URL > authors_map
 sed -i 's/mycompany/stateauto/g' authors_map
 ```
 
-## create git repo with authors and without svn revision in commit message (so just original svn commit message)
+## Create git repo with authors file and without svn revision in commit message (so just original svn commit message)
 ```
-git svn clone SVN_URL --authors-file=authors_map --no-metadata --prefix "" -s -r: <new_DIRECTORY> --stdlayout
+git svn clone SVN_URL --authors-file=authors_map --no-metadata --prefix "" -s -r<start>:<end> <new_DIRECTORY> --stdlayout
+**Eg:** git svn clone SVN_URL --authors-file=authors_map --no-metadata --prefix "" -s -r123:456 REPO_NAME --stdlayout
+**Note:** <start><end> are the SVN revision numbers 
 ```
 
-## fix tags
+
+## Fix tags
 ```
 cd <new_DIRECTORY>
 for t in $(git for-each-ref --format='%(refname:short)' refs/remotes/tags); do git tag ${t/tags\//} $t && git branch -D -r $t; done
 ```
 
-## setup branches/tags to be ready to push to remote git server
+## Setup branches/tags to be ready to push to remote git server
 ```
 for b in $(git for-each-ref --format='%(refname:short)' refs/remotes); do git branch $b refs/remotes/$b && git branch -D -r $b; done
 ```
 
-## delete trunk 
+## Delete trunk 
 ```
 git branch -d trunk
 ```
 
-## push everything to git remote
+## Push everything to git remote
 ```
 git remote add origin GIT_URL
 ```
 
-## For each branch 
+## Master branch 
 ```
 git fetch origin
 git merge -s recursive -X theirs origin/master --allow-unrelated-histories -m "Migrating SVN history"
 ```
+
+## All branches
 ```
 git checkout <SVN_BranchName>
 git fetch origin
 git merge -s recursive -X theirs origin/<SVN_BranchName> --allow-unrelated-histories -m "Migrating SVN history"
 ```
+## Final
 ```
 git push origin --all
 git push origin --tags
