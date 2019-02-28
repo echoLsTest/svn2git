@@ -11,6 +11,8 @@ sed -i 's/mycompany/stateauto/g' authors_map
 ```
 git svn clone SVN_URL --authors-file=authors_map --no-metadata --prefix "" -s -r<start>:<end> <new_DIRECTORY> --stdlayout
 Note: <start>,<end> are the SVN revision numbers 
+Command for <start>: svn log -r 1:HEAD --limit 1 SVN_URL
+Command for <end>: svn info SVN_URL -r 'HEAD' | grep Revision | egrep -o "[0-9]+"
 ```
 
 ## Fix tags
